@@ -11,77 +11,114 @@
 #import "MessagesDetailViewController.h"
 
 @interface MessagesMasterViewController () {
-    NSMutableArray *_objects;
+    NSMutableArray *_objects;   // Contains NSDictionaries for messages
+    NSMutableData *_data;
 }
 @end
 
 @implementation MessagesMasterViewController
 
-- (void)awakeFromNib
+- (void) awakeFromNib
 {
     [super awakeFromNib];
 }
 
-- (void)viewDidLoad
+- (void) viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-  self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
-  UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
-  self.navigationItem.rightBarButtonItem = addButton;
+    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
+    self.navigationItem.rightBarButtonItem = addButton;
+
+    // GET data from the messages API
+    NSString *messagesURL = @"http://cis195-messages.herokuapp.com/messages";
+    NSURLRequest *request = [NSURLRequest requestWithURL:
+                             [NSURL URLWithString:messagesURL]];
+    NSURLConnection *connection = [[NSURLConnection alloc]
+                                   initWithRequest:request delegate:self];
+    [connection start];
 }
 
-- (void)didReceiveMemoryWarning
+- (void) didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-- (void)insertNewObject:(id)sender
+- (void) insertNewObject:(id)sender
 {
     if (!_objects) {
         _objects = [[NSMutableArray alloc] init];
     }
-    [_objects insertObject:[NSDate date] atIndex:0];
+    
+    NSArray *values = [NSArray arrayWithObjects:@"New Message", @"Sample Body", nil];
+    NSArray *keys = [NSArray arrayWithObjects:@"title", @"body", nil];
+    NSDictionary *newMessage = [NSDictionary dictionaryWithObjects:values forKeys:keys];
+    
+    [_objects insertObject:newMessage atIndex:0];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
+/*
+- (void) insertNewObject:(id)sender {
+    NSString *newNoteTitle = @"New Note";
+    // TODO: implement this
+    CLLocation *currentLocation = nil;
+    [self.dataController addNoteWithTitle:newNoteTitle location:currentLocation];
+    
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.noteTable reloadData];
 }
+*/
 
 #pragma mark - Table View
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+- (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView
 {
   return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (NSInteger) tableView:(UITableView *)tableView
+  numberOfRowsInSection:(NSInteger)section
 {
-  return _objects.count;
+    return _objects.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *) tableView:(UITableView *)tableView
+          cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"
+                                       forIndexPath:indexPath];
 
-  NSDate *object = _objects[indexPath.row];
-  cell.textLabel.text = [object description];
+    NSDictionary *msg = _objects[indexPath.row];
+    cell.textLabel.text = [msg valueForKey:@"title"];
+    cell.detailTextLabel.text = [msg valueForKey:@"created_at"];
     return cell;
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+- (BOOL) tableView:(UITableView *)tableView
+  canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the specified item to be editable.
     return YES;
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+- (void) tableView:(UITableView *)tableView
+commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
+ forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [_objects removeObjectAtIndex:indexPath.row];
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [tableView deleteRowsAtIndexPaths:@[indexPath]
+                         withRowAnimation:UITableViewRowAnimationFade];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+        // Create a new instance of the appropriate class, insert it into the
+        // array, and add a new row to the table view.
     }
 }
 
@@ -101,13 +138,42 @@
 }
 */
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSDate *object = _objects[indexPath.row];
+        NSDictionary *object = _objects[indexPath.row];
         [[segue destinationViewController] setDetailItem:object];
     }
 }
+
+#pragma mark - Connection callbacks
+
+- (void) connection:(NSURLConnection *)connection
+ didReceiveResponse:(NSURLResponse *)response
+{
+    _data = [[NSMutableData alloc] init];
+}
+
+- (void) connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    [_data appendData:data];
+}
+
+- (void) connection:(NSURLConnection *)connection
+   didFailWithError:(NSError *)error
+{
+    NSLog(@"%@", error.description);
+}
+
+- (void) connectionDidFinishLoading:(NSURLConnection *) connection
+{
+    NSArray *messages = [NSJSONSerialization JSONObjectWithData:_data options:0
+                                                          error:nil];
+    _objects = (NSMutableArray *) messages;
+    [self.tableView reloadData];
+    // NSLog(@"%@", messages);
+}
+
 
 @end
