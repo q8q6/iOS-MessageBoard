@@ -38,10 +38,12 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    // self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
-    self.navigationItem.rightBarButtonItem = addButton;
+    //  UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
+    //  self.navigationItem.rightBarButtonItem = addButton;
+    // [self.messageButton setTarget:self];
+    // [self.messageButton setAction:@selector(insertNewObject:)];
 
     [self loadMessages];
 }
@@ -50,24 +52,6 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void) insertNewObject:(id)sender
-{
-    if (!_objects) {
-        _objects = [[NSMutableArray alloc] init];
-    }
-    
-    NSArray *values = [NSArray arrayWithObjects:@"New Message", @"Sample Body",
-                       nil];
-    NSArray *keys = [NSArray arrayWithObjects:@"title", @"body", nil];
-    NSDictionary *newMessage = [NSDictionary dictionaryWithObjects:values
-                                                           forKeys:keys];
-    
-    [_objects insertObject:newMessage atIndex:0];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath]
-                          withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 #pragma mark - Table View
@@ -89,9 +73,9 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"
                                        forIndexPath:indexPath];
 
-    NSDictionary *msg = _objects[indexPath.row];
-    cell.textLabel.text = [msg valueForKey:@"title"];
-    cell.detailTextLabel.text = [msg valueForKey:@"created_at"];
+    NSMutableDictionary *msg  = _objects[indexPath.row];
+    cell.textLabel.text       = (NSString *) [msg objectForKey:@"title"];
+    cell.detailTextLabel.text = (NSString *) [msg objectForKey:@"created_at"];
     return cell;
 }
 
@@ -116,28 +100,29 @@ commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
     }
 }
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSDictionary *object = _objects[indexPath.row];
+        NSMutableDictionary *object = _objects[indexPath.row];
         [[segue destinationViewController] setDetailItem:object];
+    } else if ([[segue identifier] isEqualToString:@"newMessage"]) {
+        if (!_objects) {
+            _objects = [[NSMutableArray alloc] init];
+        }
+        
+        NSArray *values = [NSArray arrayWithObjects:@"New Message",
+                           @"Write your message...", @"true", nil];
+        NSArray *keys = [NSArray arrayWithObjects:@"title", @"body", @"is_new", nil];
+        NSMutableDictionary *newMessage = [NSMutableDictionary
+                                           dictionaryWithObjects:values
+                                           forKeys:keys];
+        
+        [_objects insertObject:newMessage atIndex:0];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+        [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+        [[segue destinationViewController] setDetailItem:newMessage];
     }
 }
 
@@ -162,11 +147,46 @@ commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 
 - (void) connectionDidFinishLoading:(NSURLConnection *) connection
 {
+    NSDate *createdAt;
+    NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
+    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+    [inputFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
+    [outputFormatter setDateStyle:NSDateFormatterMediumStyle];
+    [outputFormatter setTimeStyle:NSDateFormatterShortStyle];
+    
     NSArray *messages = [NSJSONSerialization JSONObjectWithData:_data options:0
                                                           error:nil];
-    _objects = [NSMutableArray arrayWithArray:messages];
+    NSMutableDictionary *messageObject;
+    
+    if (!_objects) {
+        _objects = [[NSMutableArray alloc] init];
+    }
+    
+    for (NSDictionary *message in messages) {
+        messageObject = [NSMutableDictionary dictionaryWithDictionary:message];
+        
+        if ([messageObject valueForKey:@"title"] == (id)[NSNull null] ||
+            [messageObject valueForKey:@"body"]  == (id)[NSNull null]) {
+            continue;
+        }
+        
+        createdAt = [inputFormatter
+                     dateFromString:[message valueForKey:@"created_at"]];
+        [messageObject setValue:[outputFormatter stringFromDate:createdAt]
+                         forKey:@"created_at"];
+        [_objects addObject:messageObject];
+    }
+    
+    NSLog(@"**************");
+    [connection cancel];
     [self.tableView reloadData];
 }
 
 
+- (IBAction) refreshMessages:(UIBarButtonItem *)sender
+{
+    _data = nil;
+    _objects = nil;
+    [self loadMessages];
+}
 @end

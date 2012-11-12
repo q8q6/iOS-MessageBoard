@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface MessagesMasterViewController : UITableViewController
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *messageButton;
+- (IBAction)refreshMessages:(UIBarButtonItem *)sender;
 
 @end

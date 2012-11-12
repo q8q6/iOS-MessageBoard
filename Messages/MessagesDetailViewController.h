@@ -10,10 +10,13 @@
 
 @interface MessagesDetailViewController : UIViewController
 
-@property (strong, nonatomic) NSDictionary *detailItem;
+@property (strong, nonatomic) NSMutableDictionary *detailItem;
 
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UITextField *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 @property (weak, nonatomic) IBOutlet UITextView *bodyLabel;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *postMessageButton;
+
+- (IBAction)postMessage:(UIBarButtonItem *)sender;
 
 @end
