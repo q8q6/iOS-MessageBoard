@@ -23,6 +23,17 @@
     [super awakeFromNib];
 }
 
+- (void) loadMessages
+{
+    // GET data from the messages API
+    NSString *messagesURL = @"http://cis195-messages.herokuapp.com/messages";
+    NSURLRequest *request = [NSURLRequest requestWithURL:
+                             [NSURL URLWithString:messagesURL]];
+    NSURLConnection *connection = [[NSURLConnection alloc]
+                                   initWithRequest:request delegate:self];
+    [connection start];
+}
+
 - (void) viewDidLoad
 {
     [super viewDidLoad];
@@ -32,13 +43,7 @@
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
     self.navigationItem.rightBarButtonItem = addButton;
 
-    // GET data from the messages API
-    NSString *messagesURL = @"http://cis195-messages.herokuapp.com/messages";
-    NSURLRequest *request = [NSURLRequest requestWithURL:
-                             [NSURL URLWithString:messagesURL]];
-    NSURLConnection *connection = [[NSURLConnection alloc]
-                                   initWithRequest:request delegate:self];
-    [connection start];
+    [self loadMessages];
 }
 
 - (void) didReceiveMemoryWarning
@@ -53,28 +58,17 @@
         _objects = [[NSMutableArray alloc] init];
     }
     
-    NSArray *values = [NSArray arrayWithObjects:@"New Message", @"Sample Body", nil];
+    NSArray *values = [NSArray arrayWithObjects:@"New Message", @"Sample Body",
+                       nil];
     NSArray *keys = [NSArray arrayWithObjects:@"title", @"body", nil];
-    NSDictionary *newMessage = [NSDictionary dictionaryWithObjects:values forKeys:keys];
+    NSDictionary *newMessage = [NSDictionary dictionaryWithObjects:values
+                                                           forKeys:keys];
     
     [_objects insertObject:newMessage atIndex:0];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     [self.tableView insertRowsAtIndexPaths:@[indexPath]
                           withRowAnimation:UITableViewRowAnimationAutomatic];
 }
-
-/*
-- (void) insertNewObject:(id)sender {
-    NSString *newNoteTitle = @"New Note";
-    // TODO: implement this
-    CLLocation *currentLocation = nil;
-    [self.dataController addNoteWithTitle:newNoteTitle location:currentLocation];
-    
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self.noteTable reloadData];
-}
-*/
 
 #pragma mark - Table View
 
@@ -105,7 +99,7 @@
   canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the specified item to be editable.
-    return YES;
+    return NO;
 }
 
 - (void) tableView:(UITableView *)tableView
@@ -170,9 +164,8 @@ commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 {
     NSArray *messages = [NSJSONSerialization JSONObjectWithData:_data options:0
                                                           error:nil];
-    _objects = (NSMutableArray *) messages;
+    _objects = [NSMutableArray arrayWithArray:messages];
     [self.tableView reloadData];
-    // NSLog(@"%@", messages);
 }
 
 

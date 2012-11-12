@@ -24,7 +24,7 @@
             <objects>
                 <tableViewController storyboardIdentifier="" title="Master" id="12" customClass="MessagesMasterViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" id="13">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -73,18 +73,9 @@
             <objects>
                 <viewController storyboardIdentifier="" title="Detail" id="21" customClass="MessagesDetailViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="22">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" text="Detail view content goes here" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="27">
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="280" id="247-Ly-tqa"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" size="system"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Timestamp" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Yd-7b-qqk">
                                 <constraints>
                                     <constraint firstAttribute="height" constant="28" id="M8k-G3-peM"/>
@@ -93,45 +84,41 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jnh-5g-Zf0">
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="295" id="GP2-iN-S6y"/>
-                                    <constraint firstAttribute="width" constant="310" id="yuq-ga-sPN"/>
-                                </constraints>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <fontDescription key="fontDescription" name="Baskerville" family="Baskerville" pointSize="16"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Message Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DOJ-lh-bkt">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="300" id="7OW-3a-vLz"/>
+                                    <constraint firstAttribute="width" constant="300" id="NIE-qW-dp4"/>
                                     <constraint firstAttribute="height" constant="38" id="yqA-BR-mZS"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="24"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="90k-Yj-OWp">
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="310" id="PIa-dj-Ai1"/>
+                                    <constraint firstAttribute="height" constant="286" id="vlB-ws-PAF"/>
+                                </constraints>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" name="Georgia" family="Georgia" pointSize="16"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="27" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="1hA-hA-1ZY"/>
-                            <constraint firstItem="Jnh-5g-Zf0" firstAttribute="centerX" secondItem="22" secondAttribute="centerX" type="default" id="6kx-BY-xZO"/>
-                            <constraint firstItem="0Yd-7b-qqk" firstAttribute="top" secondItem="22" secondAttribute="top" constant="57" id="ATs-fz-hG7"/>
-                            <constraint firstItem="0Yd-7b-qqk" firstAttribute="centerX" secondItem="Jnh-5g-Zf0" secondAttribute="centerX" type="default" id="SyI-qK-Cap"/>
-                            <constraint firstItem="DOJ-lh-bkt" firstAttribute="top" secondItem="22" secondAttribute="top" constant="20" symbolic="YES" type="default" id="gcO-c9-yoZ"/>
-                            <constraint firstItem="27" firstAttribute="leading" secondItem="22" secondAttribute="leading" constant="15" id="jaT-g6-oUr"/>
+                            <constraint firstItem="0Yd-7b-qqk" firstAttribute="top" secondItem="22" secondAttribute="top" constant="56" id="0Z0-pl-dZN"/>
+                            <constraint firstItem="90k-Yj-OWp" firstAttribute="top" secondItem="0Yd-7b-qqk" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="J1l-yf-Zuj"/>
+                            <constraint firstItem="0Yd-7b-qqk" firstAttribute="centerX" secondItem="90k-Yj-OWp" secondAttribute="centerX" type="default" id="eei-lR-a8W"/>
+                            <constraint firstItem="90k-Yj-OWp" firstAttribute="centerX" secondItem="22" secondAttribute="centerX" type="default" id="kim-fj-aHr"/>
                             <constraint firstItem="DOJ-lh-bkt" firstAttribute="trailing" secondItem="0Yd-7b-qqk" secondAttribute="trailing" type="default" id="ra6-bD-RMe"/>
+                            <constraint firstItem="DOJ-lh-bkt" firstAttribute="top" secondItem="22" secondAttribute="top" constant="11" id="sRf-O5-rcc"/>
                             <constraint firstItem="DOJ-lh-bkt" firstAttribute="leading" secondItem="0Yd-7b-qqk" secondAttribute="leading" type="default" id="wAN-pt-Rri"/>
-                            <constraint firstItem="Jnh-5g-Zf0" firstAttribute="top" secondItem="22" secondAttribute="top" constant="91" id="z0P-ny-5ZD"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Message" id="26"/>
                     <connections>
-                        <outlet property="bodyLabel" destination="Jnh-5g-Zf0" id="61F-ox-JFO"/>
-                        <outlet property="dateField" destination="0Yd-7b-qqk" id="1kt-kK-FNp"/>
+                        <outlet property="bodyLabel" destination="90k-Yj-OWp" id="OZg-Ce-eVY"/>
                         <outlet property="dateLabel" destination="0Yd-7b-qqk" id="6p7-vp-vrE"/>
-                        <outlet property="detailDescriptionLabel" destination="27" id="28"/>
                         <outlet property="titleLabel" destination="DOJ-lh-bkt" id="Xcm-Hc-n26"/>
                     </connections>
                 </viewController>
@@ -146,7 +133,6 @@
             <relationships>
                 <relationship kind="outlet" name="bodyLabel" candidateClass="UITextView"/>
                 <relationship kind="outlet" name="dateLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="detailDescriptionLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
             </relationships>
         </class>
@@ -160,6 +146,6 @@
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
+        <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
 </document>

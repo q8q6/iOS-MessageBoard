@@ -33,10 +33,9 @@
     NSDictionary *msg = self.detailItem;
 
     if (msg) {
-        self.detailDescriptionLabel.text = [msg description];
         self.titleLabel.text = (NSString *) [msg objectForKey:@"title"];
-        self.bodyLabel.text = (NSString *) [msg objectForKey:@"body"];
-        self.dateLabel.text = (NSString *) [msg objectForKey:@"created_at"];
+        self.bodyLabel.text  = (NSString *) [msg objectForKey:@"body"];
+        self.dateLabel.text  = (NSString *) [msg objectForKey:@"created_at"];
     }
 }
 
