@@ -1,4 +1,4 @@
-iOS-Messages
+iOS-MessageBoard
 =================
 
 Simple iOS app that allows you to view and add messages to a class-wide API. The
