@@ -5,6 +5,7 @@ Simple iOS app that allows you to view and add messages to a class-wide API. The
 API is [accessible at this url](http://cis195-messages.herokuapp.com/messages).
 
 ![Preview](http://f.cl.ly/items/083W103n3e3F3u0k2A42/Screen%20Shot%202012-11-12%20at%204.25.22%20AM.png)
+![Preview2](http://f.cl.ly/items/1T1i0A2v2H1W240Q1Q3g/Screen%20Shot%202012-11-12%20at%204.42.10%20AM.png)
 
 ## Design Decisions
 
